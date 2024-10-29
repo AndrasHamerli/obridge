@@ -1,6 +1,1 @@
-// Set {{argumentName}} from context {{javaPropertyName}}
-if (ctx.get{{javaPropertyNameBig}}() != null) {
-ocs.setObject({{sequenceNumber}}, {{javaDataType}}Converter.getStruct(ctx.get{{javaPropertyNameBig}}(), connection));
-} else {
-ocs.setNull({{sequenceNumber}}, Types.{{JDBCType}}, "{{origTypeName}}");
-}
+inputs.put("{{argumentName}}", {{javaDataType}}Converter.getStruct(ctx.get{{javaPropertyNameBig}}(), connection));

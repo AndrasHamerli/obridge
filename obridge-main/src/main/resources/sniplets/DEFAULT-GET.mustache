@@ -1,6 +1,1 @@
-// Set {{argumentName}} from context {{javaPropertyName}}
-if (ctx.get{{javaPropertyNameBig}}() != null) {
-ocs.set{{javaDataType}}({{sequenceNumber}}, ctx.get{{javaPropertyNameBig}}());
-} else {
-ocs.setNull({{sequenceNumber}}, Types.{{JDBCType}});
-}
+inputs.put("{{argumentName}}", ctx.get{{javaPropertyNameBig}}());

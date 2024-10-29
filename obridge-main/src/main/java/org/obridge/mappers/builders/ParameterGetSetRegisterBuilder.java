@@ -58,15 +58,6 @@ public class ParameterGetSetRegisterBuilder {
             return MustacheRunner.build("sniplets/BOOLEAN-GET.mustache", pa);
         }
 
-        if (TypeMapper.JAVA_INTEGER.equals(pa.getJavaDataType())) {
-            return MustacheRunner.build("sniplets/INTEGER-GET.mustache", pa);
-        }
-
-        if (TypeMapper.JAVA_BYTEARRAY.equals(pa.getJavaDataType())) {
-            return MustacheRunner.build("sniplets/RAW-GET.mustache", pa);
-        }
-
         return MustacheRunner.build("sniplets/DEFAULT-GET.mustache", pa);
-
     }
 }

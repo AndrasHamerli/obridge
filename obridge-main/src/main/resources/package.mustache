@@ -4,107 +4,83 @@ import {{contextPackage}}.*;
 import {{converterPackage}}.*;
 import {{objectPackage}}.*;
 
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.List;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
 
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.object.StoredProcedure;
+import org.springframework.stereotype.Repository;
+
+@Repository
 @Generated("org.obridge.generators.PackageObjectGenerator")
-public final class {{javaClassName}} {
+public class {{javaClassName}} {
 
-    {{#loggingInitializer}}
-    {{& loggingInitializer}}
-    {{/loggingInitializer}}
+{{#procedureList}}
+    private final {{storedProcedureClassName}}Dao {{javaProcedureName}};
+{{/procedureList}}
 
-    private {{javaClassName}}() {
-    }
+public {{javaClassName}}(DataSource dataSource) {
+{{#procedureList}}
+    this.{{javaProcedureName}} = new {{storedProcedureClassName}}Dao(dataSource);
+{{/procedureList}}
+}
 
-    {{#procedureList}}
-
-    public static void {{javaProcedureName}}({{contextPackage}}.{{storedProcedureClassName}} ctx, Connection connection) {
-        try {
-            final CallableStatement ocs = connection.prepareCall({{& callString}});
-            try {
-                {{#bindParams}}
-                {{#inParam}}
-                {{& paramSet}}
-                {{/inParam}}
-                {{#outParam}}
-                {{& regOutput}}
-                {{/outParam}}
-                {{/bindParams}}
-                {{#loggingMethod}}
-                {{loggingMethod}}("{{javaClassName}}.{{javaProcedureName}} called");
-                {{/loggingMethod}}
-                ocs.execute();
-                {{#loggingMethod}}
-                {{loggingMethod}}("{{javaClassName}}.{{javaProcedureName}} executed");
-                {{/loggingMethod}}
-                {{#bindParams}}
-                {{#outParam}}
-                {{& paramGet}}
-                {{/outParam}}
-                {{/bindParams}}
-            } finally  {
-                {{^hasResultSetParam}}
-                ocs.close();
-                {{/hasResultSetParam}}
-                {{#hasResultSetParam}}
-                // ResultSet as return parameter, not closing connection
-                {{/hasResultSetParam}}
-            }
-        } catch (SQLException e) {
-            throw new StoredProcedureCallException(e);
-        }
-    }
-
-    public static {{contextPackage}}.{{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} Connection connection) {
-        final {{contextPackage}}.{{storedProcedureClassName}} ctx = new {{contextPackage}}.{{storedProcedureClassName}}();
-        {{#argumentList}}
+{{#procedureList}}
+    public {{contextPackage}}.{{storedProcedureClassName}} {{javaProcedureName}}({{& concatenatedTypedInParameters}}) {
+    {{contextPackage}}.{{storedProcedureClassName}} ctx = new {{contextPackage}}.{{storedProcedureClassName}}();
+    {{#argumentList}}
         {{#inParam}}
-        ctx.set{{javaPropertyNameBig}}({{javaPropertyName}});
+            ctx.set{{javaPropertyNameBig}}({{javaPropertyName}});
         {{/inParam}}
-        {{/argumentList}}
+    {{/argumentList}}
 
-        {{javaProcedureName}}(ctx, connection);
+    this.{{javaProcedureName}}.call(ctx);
 
-        return ctx;
+    return ctx;
+    }
+{{/procedureList}}
+
+{{#procedureList}}
+    public static final class {{storedProcedureClassName}}Dao extends StoredProcedure {
+
+    private {{storedProcedureClassName}}Dao(DataSource dataSource) {
+    super(dataSource, "{{& completeDbName}}");
+    {{#bindParams}}
+        {{& paramDeclaration}}
+    {{/bindParams}}
+    this.compile();
     }
 
-    {{^hasResultSetParam}}
-    public static {{contextPackage}}.{{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} DataSource dataSource) {
-        try {
-            final Connection conn = dataSource.getConnection();
-            try {
-                return {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{javaPropertyName}}, {{/inParam}}{{/argumentList}} conn);
-            } finally {
-                conn.close();
-            }
-        } catch (SQLException e) {
-            throw new StoredProcedureCallException(e);
-        }
+    public void call({{contextPackage}}.{{storedProcedureClassName}} ctx) {
+    try {
+    Map<String, Object> call = this.execute(connection -> {
+    Map<String, Object> inputs = new HashMap<>();
+    {{#bindParams}}
+        {{#inParam}}
+            {{& paramSet}}
+        {{/inParam}}
+    {{/bindParams}}
+
+    return inputs;
+    });
+
+    {{#bindParams}}
+        {{#outParam}}
+            {{& paramGet}}
+        {{/outParam}}
+    {{/bindParams}}
+    } catch (Exception e) {
+    throw new StoredProcedureCallException(e.getMessage(), e);
     }
-    {{/hasResultSetParam}}
-
-
-    {{^hasResultSetParam}}
-    public static void {{javaProcedureName}}(DataSource dataSource, {{contextPackage}}.{{storedProcedureClassName}} ctx) {
-        try {
-            final Connection conn = dataSource.getConnection();
-            try {
-                {{javaProcedureName}}(ctx, conn);
-            } finally {
-                conn.close();
-            }
-        } catch (SQLException e) {
-            throw new StoredProcedureCallException(e);
-        }
     }
-    {{/hasResultSetParam}}
-
-
-    {{/procedureList}}
-
+    }
+{{/procedureList}}
 }

@@ -46,11 +46,15 @@ public class BindParam {
     }
 
     public String getParamGet() {
-        return procedureArgument.getParamGet(sequenceNumber);
+        return procedureArgument.getParamGet();
     }
 
     public String getRegOutput() {
         return procedureArgument.getRegOutput(sequenceNumber);
+    }
+
+    public String getParamDeclaration() {
+        return procedureArgument.getParamDeclaration();
     }
 
     public boolean isInParam() {

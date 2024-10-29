@@ -37,9 +37,9 @@ import java.util.List;
  */
 public class CallStringBuilder {
 
-    private Procedure       procedure;
+    private Procedure procedure;
     private List<BindParam> bindParams;
-    private int             bindParamId = 1;
+    private int bindParamId = 1;
 
     public CallStringBuilder(Procedure procedure) {
         this.procedure = procedure;
@@ -89,14 +89,7 @@ public class CallStringBuilder {
 
     private void generateCall(StringBuilder callString) {
         generateOutReturnVariable(callString);
-
-        if (procedure.getObjectName() != null && !"".equals(procedure.getObjectName())) {
-            addLine(callString,
-                    "  \\\"" + procedure.getOwner() + "\\\"" + "." + "\\\"" + procedure.getObjectName() + "\\\".\\\"" + procedure.getProcedureName() + "\\\"( ");
-        } else {
-            addLine(callString, "  \\\"" + procedure.getOwner() + "\\\"" + "." + "\\\"" + procedure.getProcedureName() + "\\\"( ");
-        }
-
+        addLine(callString, "  " + getCompleteDbName() + "(");
         generateParameters(callString);
 
         if ("FUNCTION".equals(procedure.getMethodType()) && TypeMapper.JAVA_BOOLEAN.equals(procedure.getReturnJavaType())) {
@@ -130,7 +123,8 @@ public class CallStringBuilder {
             if (TypeMapper.JAVA_BOOLEAN.equals(procedure.getReturnJavaType())) {
                 addLine(callString, "  sys.diutil.bool_to_int( ");
             }
-            addBindParam(procedure.getArgumentList().get(0), false, true);
+            addBindParam(procedure.getArgumentList()
+                                  .get(0), false, true);
         }
     }
 
@@ -153,4 +147,11 @@ public class CallStringBuilder {
         return bindParams;
     }
 
+    public String getCompleteDbName() {
+        if (procedure.getObjectName() != null && !"".equals(procedure.getObjectName())) {
+            return "\\\"" + procedure.getObjectName() + "\\\".\\\"" + procedure.getProcedureName() + "\\\"";
+        }
+
+        return "\\\"" + procedure.getProcedureName() + "\\\"";
+    }
 }

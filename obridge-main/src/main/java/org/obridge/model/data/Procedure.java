@@ -29,20 +29,22 @@ import org.obridge.util.StringHelper;
 import org.obridge.util.TypeMapper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User: fkarsany Date: 2013.11.18.
  */
 public class Procedure {
 
-    private String                  owner;
-    private String                  objectName;
-    private String                  procedureName;
-    private String                  overload;
-    private String                  methodType;
+    private String owner;
+    private String objectName;
+    private String procedureName;
+    private String overload;
+    private String methodType;
     private List<ProcedureArgument> argumentList;
-    private List<BindParam>         bindParams = null;
-    private String                  callString;
+    private List<BindParam> bindParams = null;
+    private String callString;
+    private String completeDbName;
 
     private Procedure() {
     }
@@ -105,7 +107,8 @@ public class Procedure {
     }
 
     public String getReturnJavaType() {
-        return argumentList.get(0).getJavaDataType();
+        return argumentList.get(0)
+                           .getJavaDataType();
     }
 
     public String getCallString() {
@@ -133,9 +136,31 @@ public class Procedure {
         return false;
     }
 
+    public String getConcatenatedInParameters() {
+        return this.argumentList.stream()
+                                .filter(ProcedureArgument::isInParam)
+                                .map(ProcedureArgument::getJavaPropertyName)
+                                .collect(Collectors.joining(", "));
+    }
+
+    public String getConcatenatedTypedInParameters() {
+        return this.argumentList.stream()
+                                .filter(ProcedureArgument::isInParam)
+                                .map(a -> a.getJavaDataType() + " " + a.getJavaPropertyName())
+                                .collect(Collectors.joining(", "));
+    }
+
     @Override
     public String toString() {
         return "Procedure{" + "procedureName='" + procedureName + '\'' + '}';
+    }
+
+    public String getCompleteDbName() {
+        return completeDbName;
+    }
+
+    public void setCompleteDbName(String completeDbName) {
+        this.completeDbName = completeDbName;
     }
 
     public static class Builder {
@@ -180,8 +205,7 @@ public class Procedure {
             CallStringBuilder callStringBuilder = new CallStringBuilder(p);
             p.callString = callStringBuilder.build();
             p.bindParams = callStringBuilder.getBindParams();
+            p.completeDbName = callStringBuilder.getCompleteDbName();
         }
-
     }
-
 }

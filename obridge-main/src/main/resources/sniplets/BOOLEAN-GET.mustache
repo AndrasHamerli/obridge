@@ -1,6 +1,1 @@
-// Set {{argumentName}} from context {{javaPropertyName}}
-if (ctx.get{{javaPropertyNameBig}}() != null) {
-ocs.setInt({{sequenceNumber}}, ctx.get{{javaPropertyNameBig}}() ? 1 : 0);
-} else {
-ocs.setNull({{sequenceNumber}}, Types.INTEGER);
-}
+inputs.put("{{argumentName}}", ctx.get{{javaPropertyNameBig}}() ? 1 : 0);
