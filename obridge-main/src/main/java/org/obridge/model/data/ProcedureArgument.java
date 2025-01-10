@@ -24,6 +24,7 @@
 
 package org.obridge.model.data;
 
+import oracle.jdbc.OracleType;
 import org.obridge.mappers.builders.ParameterGetSetRegisterBuilder;
 import org.obridge.util.StringHelper;
 import org.obridge.util.TypeMapper;
@@ -188,7 +189,7 @@ public class ProcedureArgument {
 
         sb.append("\", ")
           .append(("Types." + getJDBCType()).replace("Types.CURSOR", "-10")
-                                            .replace("Types.BOOLEAN", "Types.INTEGER"));
+                                            .replace("Types.BOOLEAN", String.valueOf(OracleType.PLSQL_BOOLEAN.getVendorTypeNumber())));
 
         if (origTypeName != null && !origTypeName.isEmpty()) {
             sb.append(", \"")
@@ -216,8 +217,6 @@ public class ProcedureArgument {
             return String.format("ctx.set%s(%sConverter.getObjectList((Array)%s));", getJavaPropertyNameBig(), getUnderlyingTypeName(), callGet);
         } else if ("Integer".equals(getJavaDataType())) {
             return String.format("ctx.set%s(%s);", getJavaPropertyNameBig(), callGet);
-        } else if ("BOOLEAN".equals(getJDBCType())) {
-            return String.format("ctx.set%s(null == %s ? null : BigDecimal.ONE.equals(%s) ? true : BigDecimal.ZERO.equals(%s) ? false : null);", getJavaPropertyNameBig(), callGet, callGet, callGet);
         } else if ("ResultSet".equals(getJavaDataType())) {
             return String.format("ctx.set%s(null); // TODO (ResultSet)%s", getJavaPropertyNameBig(), callGet);
         } else if (TypeMapper.JAVA_BYTEARRAY.equals(getJavaDataType())) {
