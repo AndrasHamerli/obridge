@@ -5,15 +5,12 @@ import {{converterPackage}}.*;
 import {{objectPackage}}.*;
 
 import jakarta.annotation.Generated;
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
-
-import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.object.StoredProcedure;
@@ -27,9 +24,9 @@ public class {{javaClassName}} {
     private final {{storedProcedureClassName}}Dao {{javaProcedureName}};
 {{/procedureList}}
 
-public {{javaClassName}}(DataSource dataSource) {
+public {{javaClassName}}(JdbcTemplate jdbcTemplate) {
 {{#procedureList}}
-    this.{{javaProcedureName}} = new {{storedProcedureClassName}}Dao(dataSource);
+    this.{{javaProcedureName}} = new {{storedProcedureClassName}}Dao(jdbcTemplate);
 {{/procedureList}}
 }
 
@@ -51,8 +48,8 @@ public {{javaClassName}}(DataSource dataSource) {
 {{#procedureList}}
     public static final class {{storedProcedureClassName}}Dao extends StoredProcedure {
 
-    private {{storedProcedureClassName}}Dao(DataSource dataSource) {
-    super(dataSource, "{{& completeDbName}}");
+    private {{storedProcedureClassName}}Dao(JdbcTemplate jdbcTemplate) {
+    super(jdbcTemplate, "{{& completeDbName}}");
     {{#bindParams}}
         {{& paramDeclaration}}
     {{/bindParams}}
