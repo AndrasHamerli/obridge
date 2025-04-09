@@ -42,6 +42,8 @@ After downloading, create an XML configuration file:
 	<sourceOwner>SCOTT</sourceOwner> <!-- owner of the database objects -->
 	<sourceRoot>.</sourceRoot> <!-- where to generate sources - related to this configuration file -->
 	<rootPackageName>hu.obridge.test</rootPackageName> <!-- root Java package, generator builds the directory structure -->
+    <useSchemaName>true</useSchemaName> <!-- If true, type converters will have a SCHEMA_NAME constant 
+                                         and a connection.setSchema(SCHEMA_NAME); will be placed before each createStuct call  -->
 	<packages>
 		<entityObjects>objects</entityObjects> <!-- object types are going to this package -->
 		<converterObjects>converters</converterObjects> <!-- converter util classes are going to this package -->

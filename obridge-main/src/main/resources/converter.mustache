@@ -14,7 +14,9 @@ import java.util.Arrays;
 @Generated("org.obridge.generators.ConverterObjectGenerator")
 public final class {{javaClassName}}Converter {
 
+    {{#useSchemaName}}
     public static final String SCHEMA_NAME = "{{owner}}";
+    {{/useSchemaName}}
     public static final String TYPE_NAME = "{{typeName}}";
 
     private {{javaClassName}}Converter() {
@@ -31,7 +33,10 @@ public final class {{javaClassName}}Converter {
         {{& structAdder}}
         {{/attributeList}}
 
+        {{#useSchemaName}}
         connection.setSchema(SCHEMA_NAME);
+        {{/useSchemaName}}
+
         return connection.createStruct(TYPE_NAME, struct.toArray());
     }
 

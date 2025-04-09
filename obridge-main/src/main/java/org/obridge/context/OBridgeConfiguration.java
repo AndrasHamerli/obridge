@@ -41,6 +41,7 @@ public class OBridgeConfiguration {
     private String         password;
     private String         sourceRoot;
     private String         rootPackageName;
+    private Boolean        useSchemaName;
     private Packages       packages;
     private Logging        logging;
     private List<DbObject> dbObjects;
@@ -83,6 +84,14 @@ public class OBridgeConfiguration {
 
     public void setRootPackageName(String rootPackageName) {
         this.rootPackageName = rootPackageName;
+    }
+
+    public Boolean getUseSchemaName() {
+        return useSchemaName;
+    }
+
+    public void setUseSchemaName(Boolean useSchemaName) {
+        this.useSchemaName = useSchemaName;
     }
 
     public Packages getPackages() {

@@ -35,6 +35,7 @@ import java.util.List;
 @Data
 public class Type {
 
+    private boolean             useSchemaName;
     private String              owner;
     private String              typeName;
     private List<TypeAttribute> attributeList;
@@ -44,5 +45,4 @@ public class Type {
     public String getJavaClassName() {
         return StringHelper.toCamelCase(typeName);
     }
-
 }

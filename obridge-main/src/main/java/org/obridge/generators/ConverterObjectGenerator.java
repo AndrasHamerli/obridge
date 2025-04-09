@@ -59,7 +59,7 @@ public final class ConverterObjectGenerator {
 
             List<TypeIdDto> types = typeDao.getTypeList(c);
             for (TypeIdDto t : types) {
-                generateType(packageName, objectPackage, outputDir, t, typeDao.getTypeAttributes(t));
+                generateType(packageName, objectPackage, outputDir, t, typeDao.getTypeAttributes(t), c.getUseSchemaName());
             }
 
             /*if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
@@ -88,8 +88,10 @@ public final class ConverterObjectGenerator {
                                      String objectPackage,
                                      String outputDir,
                                      TypeIdDto type,
-                                     List<TypeAttribute> typeAttributes) throws IOException {
+                                     List<TypeAttribute> typeAttributes,
+                                     Boolean useSchemaName) throws IOException {
         Type t = new Type();
+        t.setUseSchemaName(Boolean.TRUE.equals(useSchemaName));
         t.setOwner(type.getOwner());
         t.setTypeName(type.getTypeName());
         t.setAttributeList(typeAttributes);
