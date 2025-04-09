@@ -25,7 +25,10 @@
 package org.obridge.generators;
 
 import lombok.extern.log4j.Log4j2;
+import lombok.var;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.obridge.context.Logging;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.ProcedureDao;
 import org.obridge.model.data.OraclePackage;
@@ -59,14 +62,25 @@ public final class PackageObjectGenerator {
             String objectPackage           = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
             String outputDir               = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
             String loggingClassInitializer = "";
+            String loggingAnnotationInit   = "";
             String loggingMethod           = "";
 
-            if (c.getLogging() != null) {
-                if (c.getLogging().getInitializer() != null && !c.getLogging().getInitializer().isEmpty() && c
-                        .getLogging()
-                        .getMethod() != null && !c.getLogging().getMethod().isEmpty()) {
-                    loggingClassInitializer = c.getLogging().getInitializer();
-                    loggingMethod = c.getLogging().getMethod();
+            Logging logging = c.getLogging();
+            if (logging != null) {
+                String initializer = logging.getInitializer();
+                String annotationBasedInitializer = logging.getAnnotationBasedInitializer();
+
+                if (initializer != null && !initializer.isEmpty() ) {
+                    loggingClassInitializer = initializer;
+                }
+
+                if (StringUtils.isBlank(loggingClassInitializer)  && StringUtils.isNotBlank(annotationBasedInitializer)) {
+                    loggingAnnotationInit = annotationBasedInitializer;
+                }
+
+                if (StringUtils.isNotBlank(logging.getMethod())
+                        && (StringUtils.isNotBlank(loggingClassInitializer) || StringUtils.isNotBlank(loggingAnnotationInit))) {
+                    loggingMethod = logging.getMethod();
                 }
             }
 
@@ -77,9 +91,15 @@ public final class PackageObjectGenerator {
                 oraclePackage.setContextPackage(contextPackage);
                 oraclePackage.setConverterPackage(converterPackage);
                 oraclePackage.setObjectPackage(objectPackage);
+                oraclePackage.setExtraImportClasses(c.getPackageExtraClassImports());
 
-                if (!loggingClassInitializer.isEmpty() && !loggingMethod.isEmpty()) {
-                    oraclePackage.setLoggingInitializer(String.format(loggingClassInitializer, oraclePackage.getJavaClassName()));
+                if (StringUtils.isNotBlank(loggingMethod)) {
+                    if(StringUtils.isNotBlank(loggingClassInitializer)) {
+                        oraclePackage.setLoggingInitializer(String.format(loggingClassInitializer, oraclePackage.getJavaClassName()));
+                    } else if(StringUtils.isNotBlank(loggingAnnotationInit)) {
+                        oraclePackage.setAnnotationBasedLoggingInitializer(loggingAnnotationInit);
+                    }
+
                     oraclePackage.setLoggingMethod(loggingMethod);
                 }
 
@@ -88,9 +108,7 @@ public final class PackageObjectGenerator {
 
             generateStoredProcedureCallExceptionClass(packageName, outputDir);
 
-        } catch (PropertyVetoException e) {
-            throw new OBridgeException(e);
-        } catch (IOException e) {
+        } catch (PropertyVetoException | IOException e) {
             throw new OBridgeException(e);
         }
     }

@@ -25,13 +25,11 @@
 package org.obridge.model.data;
 
 import lombok.Data;
-import lombok.ToString;
 import org.obridge.util.StringHelper;
 
 import java.util.List;
 
 @Data
-@ToString
 public class OraclePackage {
 
     private String          owner;
@@ -41,11 +39,12 @@ public class OraclePackage {
     private String          contextPackage;
     private String          converterPackage;
     private String          objectPackage;
+    private String          annotationBasedLoggingInitializer;
     private String          loggingInitializer;
     private String          loggingMethod;
+    private List<String>    extraImportClasses;
 
     public String getJavaClassName() {
         return StringHelper.toCamelCase(name);
     }
-
 }

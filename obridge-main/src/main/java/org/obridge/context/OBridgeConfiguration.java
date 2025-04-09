@@ -50,6 +50,7 @@ public class OBridgeConfiguration {
     private Packages       packages;
     private Logging        logging;
     private List<DbObject> dbObjects;
+    private List<String>   packageExtraClassImports;
 
     public String toFilterString() {
         return this.dbObjects.stream().map(DbObject::toSQL).collect(Collectors.joining(" UNION ALL "));

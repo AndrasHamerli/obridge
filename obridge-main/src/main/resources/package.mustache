@@ -16,8 +16,15 @@ import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.stereotype.Repository;
 
+{{#extraImportClasses}}
+import {{.}};
+{{/extraImportClasses}}
+
 @Repository
 @Generated("org.obridge.generators.PackageObjectGenerator")
+{{#annotationBasedLoggingInitializer}}
+    {{{annotationBasedLoggingInitializer}}}
+{{/annotationBasedLoggingInitializer}}
 public class {{javaClassName}} {
 
 {{#loggingInitializer}}

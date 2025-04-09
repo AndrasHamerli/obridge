@@ -50,6 +50,22 @@ After downloading, create an XML configuration file:
 		<procedureContextObjects>context</procedureContextObjects> <!-- procedure parameter entities are going to this package -->
 		<packageObjects>packages</packageObjects> <!-- procedure calling utility classes are going to this package -->
 	</packages>
+
+    <packageExtraClassImports> <!-- Additional imports for the generated package classes -->
+        <packageExtraClassImport>lombok.extern.slf4j.Slf4j</packageExtraClassImport>
+    </packageExtraClassImports>
+
+    <logging> <!-- Logging configuration. -->
+        <!-- initializer takes precedence over annotationBasedInitializer. Add %s placeholder for classname! -->
+        <initializer>private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(%s.class);</initializer> 
+        <!-- Use full class name or add to packageExtraClassImports --> 
+        <annotationBasedInitializer>@Slf4j</annotationBasedInitializer>
+        <method>log.trace</method>
+    </logging>
+
+    <dbObjects> <!-- Optional. If present, then the listed objects will be generated only! -->
+        <dbObject><owner>scott</owner><name>ty_dummy</name></dbObject>
+    </dbObjects>
 </configuration>
 ```
 Run the generator:

@@ -8,6 +8,7 @@ import lombok.Setter;
 public class Logging {
 
     private String initializer;
+    private String annotationBasedInitializer;
     private String method;
     private Boolean enabled;
 }

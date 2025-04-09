@@ -41,11 +41,14 @@ public class XStreamFactory {
 
         xStream.alias("configuration", OBridgeConfiguration.class);
 
-        xStream.aliasField("dbObjects",OBridgeConfiguration.class, "dbObjects");
-
+        xStream.aliasField("dbObjects", OBridgeConfiguration.class, "dbObjects");
         xStream.alias("dbObject", DbObject.class);
         xStream.useAttributeFor(DbObject.class, "owner");
         xStream.useAttributeFor(DbObject.class, "name");
+
+
+        xStream.aliasField("packageExtraClassImports", OBridgeConfiguration.class, "packageExtraClassImports");
+        xStream.alias("packageExtraClassImport", String.class);
 
         xStream.allowTypesByWildcard(new String[]{"org.obridge.context.**"});
 
