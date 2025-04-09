@@ -24,6 +24,9 @@
 
 package org.obridge.context;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +37,8 @@ import java.util.stream.Collectors;
  * @version $Id$
  * @since 1.0
  */
+@Setter
+@Getter
 public class OBridgeConfiguration {
 
     private String         jdbcUrl;
@@ -46,79 +51,7 @@ public class OBridgeConfiguration {
     private Logging        logging;
     private List<DbObject> dbObjects;
 
-    public String getJdbcUrl() {
-        return jdbcUrl;
-    }
-
-    public void setJdbcUrl(String jdbcUrl) {
-        this.jdbcUrl = jdbcUrl;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getSourceRoot() {
-        return sourceRoot;
-    }
-
-    public void setSourceRoot(String sourceRoot) {
-        this.sourceRoot = sourceRoot;
-    }
-
-    public String getRootPackageName() {
-        return rootPackageName;
-    }
-
-    public void setRootPackageName(String rootPackageName) {
-        this.rootPackageName = rootPackageName;
-    }
-
-    public Boolean getUseSchemaName() {
-        return useSchemaName;
-    }
-
-    public void setUseSchemaName(Boolean useSchemaName) {
-        this.useSchemaName = useSchemaName;
-    }
-
-    public Packages getPackages() {
-        return packages;
-    }
-
-    public void setPackages(Packages packages) {
-        this.packages = packages;
-    }
-
-    public Logging getLogging() {
-        return logging;
-    }
-
-    public void setLogging(Logging logging) {
-        this.logging = logging;
-    }
-
-    public List<DbObject> getDbObjects() {
-        return dbObjects;
-    }
-
-    public void setDbObjects(List<DbObject> dbObjects) {
-        this.dbObjects = dbObjects;
-    }
-
     public String toFilterString() {
-        return this.dbObjects.stream().map(dbObject -> dbObject.toSQL()).collect(Collectors.joining(" UNION ALL "));
+        return this.dbObjects.stream().map(DbObject::toSQL).collect(Collectors.joining(" UNION ALL "));
     }
 }

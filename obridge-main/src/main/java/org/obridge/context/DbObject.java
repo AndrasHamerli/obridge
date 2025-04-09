@@ -1,5 +1,10 @@
 package org.obridge.context;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class DbObject {
 
     private String owner;
@@ -13,22 +18,6 @@ public class DbObject {
     public DbObject() {
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String toConcatenated() {
         return this.owner + "." + this.name;
     }
@@ -36,5 +25,4 @@ public class DbObject {
     public String toSQL() {
         return "SELECT '" + this.owner + "', '" + this.name + "' FROM dual ";
     }
-
 }
