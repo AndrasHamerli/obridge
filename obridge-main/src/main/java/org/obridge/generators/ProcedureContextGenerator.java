@@ -38,6 +38,7 @@ import org.obridge.util.OBridgeException;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -72,8 +73,8 @@ public final class ProcedureContextGenerator {
         pojo.setPackageName(packageName);
         pojo.setGeneratorName("org.obridge.generators.ProcedureContextGenerator");
         pojo.getImports().add(objectPackage + ".*");
-        pojo.getImports().add("javax.annotation.Generated");
+        pojo.getImports().add("jakarta.annotation.Generated");
         String javaSource = MustacheRunner.build("pojo.mustache", pojo);
-        FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource), "utf-8");
+        FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource), StandardCharsets.UTF_8);
     }
 }

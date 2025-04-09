@@ -3,7 +3,7 @@ package {{packageName}};
 import oracle.jdbc.OracleConnection;
 import java.sql.Array;
 
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Connection;
@@ -18,37 +18,33 @@ public final class PrimitiveTypeConverter {
     private PrimitiveTypeConverter() {
     }
 
-    public static Array getListArray(List o, Connection c, String typeName) throws SQLException {
+    public static Array getListArray(List<?> o, Connection c, String typeName) throws SQLException {
         OracleConnection connection = c.unwrap(OracleConnection.class);
 
         if (o == null) {
             return connection.createOracleArray(typeName, new Object[0]);
         }
-        List<Object> array = new ArrayList<Object>(o.size());
-        for (Object e : o) {
-            array.add(e);
-        }
+
+        List<Object> array = new ArrayList<>(o.size());
+        array.addAll(o);
+
         return connection.createOracleArray(typeName, array.toArray());
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Array array, Class<T> targetClass) throws SQLException {
-
-
         if (targetClass.equals(Integer.class)) {
-            List<T> r = new ArrayList<T>();
+            List<T> r = new ArrayList<>();
 
-            final BigDecimal[] baseArray = (BigDecimal[]) array.getArray();
+            BigDecimal[] baseArray = (BigDecimal[]) array.getArray();
 
             for (BigDecimal b : baseArray) {
                 r.add((T) new Integer(b.intValue()));
             }
 
             return r;
-
-        } else {
-            return Arrays.asList((T[]) array.getArray());
         }
 
+        return Arrays.asList((T[]) array.getArray());
     }
-
 }

@@ -85,7 +85,7 @@ public final class EntityObjectGenerator {
         Pojo pojo = PojoMapper.typeToPojo(typeName, typeAttributes);
         pojo.setPackageName(packageName);
         pojo.setGeneratorName("org.obridge.generators.EntityObjectGenerator");
-        pojo.getImports().add("javax.annotation.Generated");
+        pojo.getImports().add("jakarta.annotation.Generated");
         String javaSource = MustacheRunner.build("pojo.mustache", pojo);
         FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource), "utf-8");
     }

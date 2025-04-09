@@ -4,7 +4,7 @@ import {{objectPackage}}.*;
 import oracle.jdbc.OracleConnection;
 import java.sql.Array;
 
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -21,12 +21,11 @@ public final class {{javaClassName}}Converter {
     }
 
     public static Struct getStruct({{javaClassName}} o, Connection connection) throws SQLException {
-
         if (o == null) {
             return null;
         }
 
-        List<Object> struct = new ArrayList<Object>();
+        List<Object> struct = new ArrayList<>();
 
         {{#attributeList}}
         {{& structAdder}}
@@ -37,14 +36,13 @@ public final class {{javaClassName}}Converter {
     }
 
     public static Array getListArray(List<{{javaClassName}}> o, Connection c, String typeName) throws SQLException {
-
         OracleConnection connection = c.unwrap(OracleConnection.class);
 
         if (o == null) {
             return connection.createOracleArray(typeName, new Object[0]);
         }
 
-        List<Object> array = new ArrayList<Object>(o.size());
+        List<Object> array = new ArrayList<>(o.size());
 
         for ({{javaClassName}} e : o) {
             array.add({{javaClassName}}Converter.getStruct(e, connection));
@@ -73,26 +71,18 @@ public final class {{javaClassName}}Converter {
     }
 
     public static List<{{javaClassName}}> getObjectList(Array array) throws SQLException {
-
         if (array == null) {
-            return null;
+            return List.of();
         }
 
-        List<{{javaClassName}}> result = new ArrayList<{{javaClassName}}>();
-        ResultSet rs = null;
+        List<{{javaClassName}}> result = new ArrayList<>();
 
-        try {
-            rs = array.getResultSet();
+        try(ResultSet rs = array.getResultSet()) {
             while (rs.next()) {
                 result.add({{javaClassName}}Converter.getObject((Struct) rs.getObject(2)));
-            }
-        } finally {
-            if (rs != null) {
-                rs.close();
             }
         }
 
         return result;
     }
-
 }

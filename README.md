@@ -26,8 +26,6 @@ Supported input, output parameters and return values are:
 The following types cannot be implemented, because JDBC driver does not supports them:
   * Types declared in source code
   * %ROWTYPE parameters
-  
-Generated code compiles with Java 1.6.
 
 Usage
 -----
