@@ -56,7 +56,7 @@ public final class ProcedureContextGenerator {
             String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
             String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
 
-            ProcedureDao procedureDao = new ProcedureDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
+            ProcedureDao procedureDao = new ProcedureDao(DataSourceProvider.getDataSource(c));
 
             List<Procedure> allProcedures = procedureDao.getAllProcedure(c.getDbObjects());
 

@@ -55,7 +55,7 @@ public final class EntityObjectGenerator {
             String packageName = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
             String outputDir   = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
 
-            TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
+            TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c));
 
             List<TypeIdDto> types = typeDao.getTypeList(c);
             for (TypeIdDto type : types) {

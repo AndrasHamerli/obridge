@@ -36,7 +36,9 @@ After downloading, create an XML configuration file:
 
 ```xml
 <configuration>
-	<jdbcUrl>jdbc:oracle:thin:scott/tiger@localhost:1521:xe</jdbcUrl> <!-- jdbc connection string for obridge -->
+	<jdbcUrl>jdbc:oracle:thin:@localhost:1521:xe</jdbcUrl> <!-- jdbc connection string for obridge -->
+    <username>scott</username> <!-- username for the connection -->
+    <password>tiger</password> <!-- password for the connection -->
 	<sourceOwner>SCOTT</sourceOwner> <!-- owner of the database objects -->
 	<sourceRoot>.</sourceRoot> <!-- where to generate sources - related to this configuration file -->
 	<rootPackageName>hu.obridge.test</rootPackageName> <!-- root Java package, generator builds the directory structure -->

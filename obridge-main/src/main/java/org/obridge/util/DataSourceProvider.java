@@ -25,6 +25,7 @@
 package org.obridge.util;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import org.obridge.context.OBridgeConfiguration;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
@@ -41,22 +42,23 @@ public final class DataSourceProvider {
     private DataSourceProvider() {
     }
 
-    public static DataSource getDataSource(String jdbcURL) throws PropertyVetoException {
-
+    public static DataSource getDataSource(OBridgeConfiguration c) throws PropertyVetoException {
         if (dataSourcePool == null) {
             dataSourcePool = new HashMap<>();
         }
 
-        if (!dataSourcePool.containsKey(jdbcURL)) {
+        String jdbcUrl = c.getJdbcUrl();
 
+        if (!dataSourcePool.containsKey(jdbcUrl)) {
             ComboPooledDataSource dataSource = new ComboPooledDataSource();
             dataSource.setDriverClass("oracle.jdbc.OracleDriver");
-            dataSource.setJdbcUrl(jdbcURL);
+            dataSource.setJdbcUrl(jdbcUrl);
+            dataSource.setUser(c.getUsername());
+            dataSource.setPassword(c.getPassword());
 
-            dataSourcePool.put(jdbcURL, dataSource);
+            dataSourcePool.put(jdbcUrl, dataSource);
         }
 
-        return dataSourcePool.get(jdbcURL);
+        return dataSourcePool.get(jdbcUrl);
     }
-
 }
