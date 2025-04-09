@@ -20,6 +20,10 @@ import org.springframework.stereotype.Repository;
 @Generated("org.obridge.generators.PackageObjectGenerator")
 public class {{javaClassName}} {
 
+{{#loggingInitializer}}
+    {{{loggingInitializer}}}
+{{/loggingInitializer}}
+
 {{#procedureList}}
     private final {{storedProcedureClassName}}Dao {{javaProcedureName}};
 {{/procedureList}}
@@ -39,7 +43,15 @@ public {{javaClassName}}(JdbcTemplate jdbcTemplate) {
         {{/inParam}}
     {{/argumentList}}
 
+    {{#loggingMethod}}
+        {{loggingMethod}}("Starting {{javaClassName}}.{{javaProcedureName}} call");
+    {{/loggingMethod}}
+
     this.{{javaProcedureName}}.call(ctx);
+
+    {{#loggingMethod}}
+        {{loggingMethod}}("{{javaClassName}}.{{javaProcedureName}} executed");
+    {{/loggingMethod}}
 
     return ctx;
     }
