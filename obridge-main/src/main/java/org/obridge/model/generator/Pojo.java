@@ -24,65 +24,24 @@
 
 package org.obridge.model.generator;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
 /**
  * Created by fkarsany on 2015.01.03..
  */
+@Getter
+@Setter
 public class Pojo {
 
+    private boolean lombok;
+    private boolean getterSetterMethods;
     private String packageName;
     private String className;
     private List<PojoField> fields;
     private String comment;
     private List<String> imports;
     private String generatorName;
-
-    public List<String> getImports() {
-        return imports;
-    }
-
-    public void setImports(List<String> imports) {
-        this.imports = imports;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public List<PojoField> getFields() {
-        return fields;
-    }
-
-    public void setFields(List<PojoField> fields) {
-        this.fields = fields;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    public String getGeneratorName() {
-        return generatorName;
-    }
-
-    public void setGeneratorName(String generatorName) {
-        this.generatorName = generatorName;
-    }
 }

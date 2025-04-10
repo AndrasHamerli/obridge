@@ -54,16 +54,17 @@ public final class EntityObjectGenerator {
         try {
             String packageName = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
             String outputDir   = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
+            boolean useLombok = Boolean.TRUE.equals(c.getUseLombokAccessors());
 
             TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c));
 
             List<TypeIdDto> types = typeDao.getTypeList(c);
             for (TypeIdDto type : types) {
-                generateEntityObject(packageName, outputDir, type.getTypeName(), typeDao.getTypeAttributes(type));
+                generateEntityObject(useLombok, packageName, outputDir, type.getTypeName(), typeDao.getTypeAttributes(type));
             }
 
             if (types.size() == 0) {
-                generateEntityObject(packageName, outputDir, "Dummy", new ArrayList<>());
+                generateEntityObject(useLombok, packageName, outputDir, "Dummy", new ArrayList<>());
             }
 
             /*if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
@@ -78,14 +79,19 @@ public final class EntityObjectGenerator {
         }
     }
 
-    private static void generateEntityObject(String packageName,
+    private static void generateEntityObject(boolean lombok,
+                                             String packageName,
                                              String outputDir,
                                              String typeName,
                                              List<TypeAttribute> typeAttributes) throws IOException {
-        Pojo pojo = PojoMapper.typeToPojo(typeName, typeAttributes);
+        Pojo pojo = PojoMapper.typeToPojo(lombok,typeName, typeAttributes);
+
         pojo.setPackageName(packageName);
         pojo.setGeneratorName("org.obridge.generators.EntityObjectGenerator");
-        pojo.getImports().add("jakarta.annotation.Generated");
+
+        List<String> imports = pojo.getImports();
+        imports.add("jakarta.annotation.Generated");
+
         String javaSource = MustacheRunner.build("pojo.mustache", pojo);
         FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource), "utf-8");
     }

@@ -44,6 +44,8 @@ After downloading, create an XML configuration file:
 	<rootPackageName>hu.obridge.test</rootPackageName> <!-- root Java package, generator builds the directory structure -->
     <useSchemaName>true</useSchemaName> <!-- If true, type converters will have a SCHEMA_NAME constant 
                                          and a connection.setSchema(SCHEMA_NAME); will be placed before each createStuct call  -->
+    <useLombokAccessors>true</useLombokAccessors> <!-- POJOs will  be be annotated with lombok @Getter and @Setter instead of getter and setter methods -->
+    
 	<packages>
 		<entityObjects>objects</entityObjects> <!-- object types are going to this package -->
 		<converterObjects>converters</converterObjects> <!-- converter util classes are going to this package -->

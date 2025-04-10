@@ -29,7 +29,7 @@ public class PojoMapperTest extends BaseTest {
     @Test
     public void testToPojo() {
         TypeIdDto t    = new TypeIdDto("OBRIDGE", SAMPLE_TYPE_ONE);
-        Pojo      pojo = PojoMapper.typeToPojo(SAMPLE_TYPE_ONE, typeDao.getTypeAttributes(t));
+        Pojo      pojo = PojoMapper.typeToPojo(false, SAMPLE_TYPE_ONE, typeDao.getTypeAttributes(t));
         Assert.assertEquals("SampleTypeOne", pojo.getClassName());
         Assert.assertEquals(9, pojo.getFields().size());
         for (PojoField f : pojo.getFields()) {
@@ -51,7 +51,7 @@ public class PojoMapperTest extends BaseTest {
             }
         }
 
-        Pojo pojo = PojoMapper.procedureToPojo(ppp);
+        Pojo pojo = PojoMapper.procedureToPojo(false, ppp);
         Assert.assertEquals("SimpleProceduresOverload2", pojo.getClassName());
         Assert.assertEquals(1, pojo.getFields().size());
 
@@ -69,7 +69,7 @@ public class PojoMapperTest extends BaseTest {
             }
         }
 
-        Pojo pojo = PojoMapper.procedureToPojo(ppp);
+        Pojo pojo = PojoMapper.procedureToPojo(false, ppp);
         Assert.assertEquals("SimpleProceduresSimpleFunc", pojo.getClassName());
         Assert.assertEquals(4, pojo.getFields().size());
 

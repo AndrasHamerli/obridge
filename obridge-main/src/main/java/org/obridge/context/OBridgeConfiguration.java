@@ -49,6 +49,7 @@ public class OBridgeConfiguration {
     private Boolean        useSchemaName;
     private Packages       packages;
     private Logging        logging;
+    private Boolean        useLombokAccessors;
     private List<DbObject> dbObjects;
     private List<String>   packageExtraClassImports;
 

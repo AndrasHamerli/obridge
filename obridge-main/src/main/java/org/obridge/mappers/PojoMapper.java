@@ -40,11 +40,10 @@ public final class PojoMapper {
     private PojoMapper() {
     }
 
-    public static Pojo typeToPojo(String typeName, List<TypeAttribute> typeAttributes) {
+    public static Pojo typeToPojo(boolean lombok, String typeName, List<TypeAttribute> typeAttributes) {
         Pojo p = new Pojo();
         p.setClassName(StringHelper.toCamelCase(typeName));
-
-        p.setFields(new ArrayList<PojoField>());
+        p.setFields(new ArrayList<>());
 
         for (TypeAttribute t : typeAttributes) {
             PojoField field = new PojoField();
@@ -54,22 +53,23 @@ public final class PojoMapper {
             p.getFields().add(field);
         }
 
-        p.setImports(new ArrayList<String>());
+        p.setImports(new ArrayList<>());
 
         p.getImports().add("java.sql.Timestamp");
         p.getImports().add("java.sql.Date");
         p.getImports().add("java.util.List");
         p.getImports().add("java.math.BigDecimal");
+        p.getImports().add("jakarta.annotation.Generated");
+
+        setLombokRelatedData(p, lombok);
 
         return p;
-
     }
 
-    public static Pojo procedureToPojo(Procedure procedure) {
+    public static Pojo procedureToPojo(boolean lombok, Procedure procedure) {
         Pojo p = new Pojo();
         p.setClassName(procedure.getStoredProcedureClassName());
-
-        p.setFields(new ArrayList<PojoField>());
+        p.setFields(new ArrayList<>());
 
         for (ProcedureArgument t : procedure.getArgumentList()) {
             PojoField field = new PojoField();
@@ -78,16 +78,28 @@ public final class PojoMapper {
             p.getFields().add(field);
         }
 
-        p.setImports(new ArrayList<String>());
+        p.setImports(new ArrayList<>());
 
         p.getImports().add("java.sql.Timestamp");
         p.getImports().add("java.sql.Date");
         p.getImports().add("java.util.List");
         p.getImports().add("java.math.BigDecimal");
         p.getImports().add("java.sql.ResultSet");
+        p.getImports().add("jakarta.annotation.Generated");
+
+        setLombokRelatedData(p, lombok);
 
         return p;
 
     }
 
+    private static void setLombokRelatedData(Pojo p, boolean lombok){
+        p.setLombok(lombok);
+        p.setGetterSetterMethods(!lombok);
+
+        if(lombok) {
+            p.getImports().add("lombok.Getter");
+            p.getImports().add("lombok.Setter");
+        }
+    }
 }

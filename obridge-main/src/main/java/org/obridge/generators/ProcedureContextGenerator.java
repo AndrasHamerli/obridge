@@ -61,19 +61,18 @@ public final class ProcedureContextGenerator {
             List<Procedure> allProcedures = procedureDao.getAllProcedure(c.getDbObjects());
 
             for (Procedure p : allProcedures) {
-                generateProcedureContext(packageName, objectPackage, outputDir, p);
+                generateProcedureContext(Boolean.TRUE.equals(c.getUseLombokAccessors()), packageName, objectPackage, outputDir, p);
             }
         } catch (PropertyVetoException | IOException e) {
             throw new OBridgeException(e);
         }
     }
 
-    private static void generateProcedureContext(String packageName, String objectPackage, String outputDir, Procedure p) throws IOException {
-        Pojo pojo = PojoMapper.procedureToPojo(p);
+    private static void generateProcedureContext(boolean lombok, String packageName, String objectPackage, String outputDir, Procedure p) throws IOException {
+        Pojo pojo = PojoMapper.procedureToPojo(lombok, p);
         pojo.setPackageName(packageName);
         pojo.setGeneratorName("org.obridge.generators.ProcedureContextGenerator");
         pojo.getImports().add(objectPackage + ".*");
-        pojo.getImports().add("jakarta.annotation.Generated");
         String javaSource = MustacheRunner.build("pojo.mustache", pojo);
         FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource), StandardCharsets.UTF_8);
     }
