@@ -24,6 +24,8 @@
 
 package org.obridge.model.data;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.obridge.mappers.builders.CallStringBuilder;
 import org.obridge.util.StringHelper;
 import org.obridge.util.TypeMapper;
@@ -34,6 +36,8 @@ import java.util.stream.Collectors;
 /**
  * User: fkarsany Date: 2013.11.18.
  */
+@Setter
+@Getter
 public class Procedure {
 
     private String owner;
@@ -45,56 +49,9 @@ public class Procedure {
     private List<BindParam> bindParams = null;
     private String callString;
     private String completeDbName;
+    private boolean needReturn;
 
     private Procedure() {
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public List<ProcedureArgument> getArgumentList() {
-        return argumentList;
-    }
-
-    public void setArgumentList(List<ProcedureArgument> argumentList) {
-        this.argumentList = argumentList;
-    }
-
-    public String getMethodType() {
-        return methodType;
-    }
-
-    public void setMethodType(String methodType) {
-        this.methodType = methodType;
-    }
-
-    public String getObjectName() {
-        return objectName;
-    }
-
-    public void setObjectName(String objectName) {
-        this.objectName = objectName;
-    }
-
-    public String getProcedureName() {
-        return procedureName;
-    }
-
-    public void setProcedureName(String procedureName) {
-        this.procedureName = procedureName;
-    }
-
-    public String getOverload() {
-        return overload;
-    }
-
-    public void setOverload(String overload) {
-        this.overload = overload;
     }
 
     public String getJavaProcedureName() {
@@ -109,22 +66,6 @@ public class Procedure {
     public String getReturnJavaType() {
         return argumentList.get(0)
                            .getJavaDataType();
-    }
-
-    public String getCallString() {
-        return this.callString;
-    }
-
-    public void setCallString(String callString) {
-        this.callString = callString;
-    }
-
-    public List<BindParam> getBindParams() {
-        return bindParams;
-    }
-
-    public void setBindParams(List<BindParam> bindParams) {
-        this.bindParams = bindParams;
     }
 
     public boolean hasResultSetParam() {
@@ -153,14 +94,6 @@ public class Procedure {
     @Override
     public String toString() {
         return "Procedure{" + "procedureName='" + procedureName + '\'' + '}';
-    }
-
-    public String getCompleteDbName() {
-        return completeDbName;
-    }
-
-    public void setCompleteDbName(String completeDbName) {
-        this.completeDbName = completeDbName;
     }
 
     public static class Builder {
@@ -206,6 +139,7 @@ public class Procedure {
             p.callString = callStringBuilder.build();
             p.bindParams = callStringBuilder.getBindParams();
             p.completeDbName = callStringBuilder.getCompleteDbName();
+            p.needReturn = p.bindParams.stream().anyMatch(BindParam::isOutParam);
         }
     }
 }

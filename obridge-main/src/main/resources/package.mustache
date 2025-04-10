@@ -42,7 +42,7 @@ public {{javaClassName}}(JdbcTemplate jdbcTemplate) {
 }
 
 {{#procedureList}}
-    public {{contextPackage}}.{{storedProcedureClassName}} {{javaProcedureName}}({{& concatenatedTypedInParameters}}) {
+    public {{#needReturn}}{{contextPackage}}.{{storedProcedureClassName}}{{/needReturn}}{{^needReturn}}void{{/needReturn}} {{javaProcedureName}}({{& concatenatedTypedInParameters}}) {
     {{contextPackage}}.{{storedProcedureClassName}} ctx = new {{contextPackage}}.{{storedProcedureClassName}}();
     {{#argumentList}}
         {{#inParam}}
@@ -60,7 +60,7 @@ public {{javaClassName}}(JdbcTemplate jdbcTemplate) {
         {{loggingMethod}}("{{javaClassName}}.{{javaProcedureName}} executed");
     {{/loggingMethod}}
 
-    return ctx;
+    {{#needReturn}}return ctx;{{/needReturn}}
     }
 {{/procedureList}}
 
@@ -77,7 +77,7 @@ public {{javaClassName}}(JdbcTemplate jdbcTemplate) {
 
     public void call({{contextPackage}}.{{storedProcedureClassName}} ctx) {
     try {
-    Map<String, Object> call = this.execute(connection -> {
+    {{#needReturn}}Map<String, Object> call = {{/needReturn}}this.execute(connection -> {
     Map<String, Object> inputs = new HashMap<>();
     {{#bindParams}}
         {{#inParam}}
