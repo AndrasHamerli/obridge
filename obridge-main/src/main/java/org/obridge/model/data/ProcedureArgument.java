@@ -101,7 +101,7 @@ public class ProcedureArgument {
 
     public String getJavaTypeName() {
         if (isList()) {
-            String mappedType = new TypeMapper().getJavaType(typeName, 0);
+            String mappedType = new TypeMapper().getJavaType(typeName, 1);
             if ("Object".equals(mappedType)) {
                 return "List<" + StringHelper.toCamelCase(typeName) + ">";
             } else {
@@ -117,12 +117,12 @@ public class ProcedureArgument {
     }
 
     public boolean isPrimitiveList() {
-        return isList() && !("Object".equals(new TypeMapper().getJavaType(typeName, 0)));
+        return isList() && !("Object".equals(new TypeMapper().getJavaType(typeName, 1)));
     }
 
     public String getUnderlyingTypeName() {
         if (isPrimitiveList()) {
-            return new TypeMapper().getJavaType(typeName, 0);
+            return new TypeMapper().getJavaType(typeName, 1);
         } else {
             return StringHelper.toCamelCase(typeName);
         }
@@ -205,14 +205,14 @@ public class ProcedureArgument {
     public String getParamGet() {
         String callGet = "call.get(\"" + (argumentName == null || argumentName.isEmpty() ? "FUNCTION_RESULT" : argumentName) + "\")";
 
-        System.err.println(callGet);
-        System.err.println(this.toString());
+        System.out.println(callGet);
+        System.out.println(this.toString());
 
         if ("OBJECT".equals(dataType)) {
             return String.format("ctx.set%s(%sConverter.getObject((Struct)%s));", getJavaPropertyNameBig(), getJavaDataType(), callGet);
         } else if (TABLE_DATATYPE_NAME.equals(dataType)) {
             if (isPrimitiveList()) {
-                return String.format("ctx.set%s(Arrays.asList((%s[]) ((Array) %s).getArray()));", getJavaPropertyNameBig(), getUnderlyingTypeName(), callGet);
+                return String.format("ctx.set%s(PrimitiveTypeConverter.asList((Array) %s, %s.class));", getJavaPropertyNameBig(),callGet, getUnderlyingTypeName());
             }
             return String.format("ctx.set%s(%sConverter.getObjectList((Array)%s));", getJavaPropertyNameBig(), getUnderlyingTypeName(), callGet);
         } else if ("Integer".equals(getJavaDataType())) {
